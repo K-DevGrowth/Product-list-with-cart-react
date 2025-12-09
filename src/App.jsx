@@ -7,15 +7,20 @@ const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [products] = useState(data);
 
-  const handleAddToCart = () => {};
+  const handleAddToCart = (product) => {
+    setCartItems([...cartItems, product]);
+  };
 
   const handleRemoveFromCart = () => {};
 
   return (
     <main className="min-h-screen relative">
-      <div className="grid grid-cols-[2fr_1fr] p-10">
+      <div className="grid grid-cols-[2fr_1fr] p-10 gap-x-4">
         <ProductHero products={products} onAddToCart={handleAddToCart} />
-        <ProductCart onRemoveFromCart={handleRemoveFromCart} />
+        <ProductCart
+          cartItems={cartItems}
+          onRemoveFromCart={handleRemoveFromCart}
+        />
       </div>
     </main>
   );

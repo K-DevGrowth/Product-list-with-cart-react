@@ -1,4 +1,4 @@
-const ProductHero = ({ products }) => {
+const ProductHero = ({ products, onAddToCart }) => {
   return (
     <section>
       <h1 className="text-3xl font-bold text-Rose-900">Desserts</h1>
@@ -11,7 +11,11 @@ const ProductHero = ({ products }) => {
               src={product.image.desktop.replace("./assets/images/", "")}
               alt=""
             />
-            <button className="flex gap-2 items-center w-full max-w-[140px] border-Rose-900 border absolute bg-Rose-50 rounded-3xl px-3 py-2 left-1/2 -translate-x-1/2 bottom-1/4">
+            <button
+              type="button"
+              onClick={() => onAddToCart(product)}
+              className="flex gap-2 items-center cursor-pointer w-full max-w-[140px] border-Rose-900 border absolute bg-Rose-50 rounded-3xl px-3 py-2 left-1/2 -translate-x-1/2 bottom-1/4"
+            >
               <img src="icon-add-to-cart.svg" alt="" />
               <p>Add to Cart</p>
             </button>
