@@ -8,15 +8,35 @@ const App = () => {
   const [products] = useState(data);
 
   const handleAddToCart = (product) => {
-    setCartItems([...cartItems, product]);
+    const existing = cartItems.find(
+      (item) => item.product.name === product.name
+    );
+
+    if (!existing) {
+      setCartItems([...cartItems, { product, amount: 1 }]);
+    } else {
+      setCartItems((prev) =>
+        prev.map((item) =>
+          item.product.name == product.name
+            ? { ...item, amount: item.amount + 1 }
+            : item
+        )
+      );
+    }
   };
 
-  const handleRemoveFromCart = () => {};
+  const handleRemoveFromCart = () => {
+    setCartItems();
+  };
 
   return (
     <main className="min-h-screen relative">
       <div className="grid grid-cols-[2fr_1fr] p-10 gap-x-4">
-        <ProductHero products={products} onAddToCart={handleAddToCart} />
+        <ProductHero
+          products={products}
+          cartItems={cartItems}
+          onAddToCart={handleAddToCart}
+        />
         <ProductCart
           cartItems={cartItems}
           onRemoveFromCart={handleRemoveFromCart}

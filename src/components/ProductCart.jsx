@@ -1,5 +1,6 @@
+import ProductCartItem from "./ProductCartItem";
+
 const ProductCart = ({ cartItems, onRemoveFromCart }) => {
-  console.log(cartItems);
   return (
     <div>
       <h2>Your Cart(0)</h2>
@@ -12,10 +13,12 @@ const ProductCart = ({ cartItems, onRemoveFromCart }) => {
       )}
 
       {cartItems.map((item) => (
-        <div key={item.name}>
-          <p>{item.name}</p>
-          <p></p>
-        </div>
+        <ProductCartItem
+          key={item.product.name}
+          onRemoveFromCart={onRemoveFromCart}
+          {...item.product}
+          amount={item.amount}
+        />
       ))}
     </div>
   );
