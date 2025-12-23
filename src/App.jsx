@@ -6,7 +6,6 @@ import ProductCart from "./components/ProductCart";
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [products] = useState(data);
-  // console.log(products);
 
   const handleAddToCart = (product, amount) => {
     setCartItems((prev) => {
@@ -26,7 +25,31 @@ const App = () => {
     });
   };
 
-  const handleRemoveFromCart = () => {};
+  const handleIncrementAmount = (product) => {
+    setCartItems((prev) => {
+      return prev.map((item) =>
+        item.product.name === product.name
+          ? { ...item, amount: item.amount + 1 }
+          : item
+      );
+    });
+  };
+
+  const handleDecrementAmount = (product) => {
+    setCartItems((prev) => {
+      return prev.map((item) =>
+        item.product.name === product.name
+          ? { ...item, amount: item.amount - 1 }
+          : item
+      );
+    });
+  };
+
+  const handleRemoveFromCart = (product) => {
+    setCartItems((prev) =>
+      prev.filter((item) => item.product.name !== product.name)
+    );
+  };
 
   return (
     <main className="min-h-screen relative">
@@ -34,6 +57,8 @@ const App = () => {
         <ProductHero
           products={products}
           cartItems={cartItems}
+          onIcrementAmount={handleIncrementAmount}
+          onDecrementAmount={handleDecrementAmount}
           onAddToCart={handleAddToCart}
         />
         <ProductCart

@@ -12,14 +12,17 @@ const ProductCart = ({ cartItems, onRemoveFromCart }) => {
         </>
       )}
 
-      {cartItems.map((item) => (
-        <ProductCartItem
-          key={item.product.name}
-          onRemoveFromCart={onRemoveFromCart}
-          {...item.product}
-          amount={item.amount}
-        />
-      ))}
+      {cartItems.map(
+        (item) =>
+          item.amount > 0 && (
+            <ProductCartItem
+              key={item.product.name}
+              onRemoveFromCart={() => onRemoveFromCart(item.product)}
+              {...item.product}
+              amount={item.amount}
+            />
+          )
+      )}
     </div>
   );
 };

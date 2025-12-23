@@ -1,8 +1,18 @@
 import { useState } from "react";
 
-const ProductHero = ({ products, cartItems, onAddToCart }) => {
-  const [amount, setAmount] = useState(0);
-  console.log(cartItems);
+const ProductHero = ({
+  products,
+  cartItems,
+  onAddToCart,
+  onIcrementAmount,
+  onDecrementAmount,
+}) => {
+  const [amount, setAmount] = useState(1);
+
+  const handleAddToCart = (product) => {
+    onAddToCart(product, amount);
+  };
+
   return (
     <section>
       <h1 className="text-3xl font-bold text-Rose-900">Desserts</h1>
@@ -17,9 +27,35 @@ const ProductHero = ({ products, cartItems, onAddToCart }) => {
             <p>{product.category}</p>
             <p>{product.name}</p>
             <p>${product.price.toFixed(2)}</p>
-            <button onClick={() => onAddToCart(product, amount)}>
-              Add to cart
-            </button>
+
+            {cartItems.find((item) => item.product.name === product.name)
+              ?.amount > 0 ? (
+              <div className="w-full flex justify-between text-Rose-50 bg-Red rounded-lg">
+                <button
+                  type="button"
+                  className="px-3 py-2"
+                  onClick={() => onIcrementAmount(product)}
+                >
+                  <img src="icon-increment-quantity.svg" alt="" />
+                </button>
+                <span>
+                  {cartItems.find((item) => item.product.name === product.name)
+                    ?.amount ?? 0}
+                </span>
+
+                <button
+                  type="button"
+                  className="px-3 py-2"
+                  onClick={() => onDecrementAmount(product)}
+                >
+                  <img src="icon-decrement-quantity.svg" alt="" />
+                </button>
+              </div>
+            ) : (
+              <button type="button" onClick={() => handleAddToCart(product)}>
+                Add to cart
+              </button>
+            )}
           </div>
         ))}
       </div>
