@@ -6,28 +6,27 @@ import ProductCart from "./components/ProductCart";
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [products] = useState(data);
+  // console.log(products);
 
-  const handleAddToCart = (product) => {
-    const existing = cartItems.find(
-      (item) => item.product.name === product.name
-    );
-
-    if (!existing) {
-      setCartItems([...cartItems, { product, amount: 1 }]);
-    } else {
-      setCartItems((prev) =>
-        prev.map((item) =>
-          item.product.name == product.name
-            ? { ...item, amount: item.amount + 1 }
-            : item
-        )
+  const handleAddToCart = (product, amount) => {
+    setCartItems((prev) => {
+      const existingProduct = prev.find(
+        (item) => item.product.name === product.name
       );
-    }
+
+      if (existingProduct) {
+        return prev.map((item) =>
+          item.product.name === product.name
+            ? { ...item, amount: item.amount + amount }
+            : item
+        );
+      }
+
+      return [...prev, { product: product, amount: 1 }];
+    });
   };
 
-  const handleRemoveFromCart = () => {
-    setCartItems();
-  };
+  const handleRemoveFromCart = () => {};
 
   return (
     <main className="min-h-screen relative">
