@@ -1,11 +1,9 @@
 import { useState } from "react";
-import data from "./data.json";
 import ProductHero from "./components/ProductHero";
 import ProductCart from "./components/ProductCart";
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
-  const [products] = useState(data);
 
   const handleAddToCart = (product, amount) => {
     setCartItems((prev) => {
@@ -37,11 +35,14 @@ const App = () => {
 
   const handleDecrementAmount = (product) => {
     setCartItems((prev) => {
-      return prev.map((item) =>
-        item.product.name === product.name
+      return prev.map((item) => {
+        if (item.amount === 1) {
+          return item;
+        }
+        return item.product.name === product.name
           ? { ...item, amount: item.amount - 1 }
-          : item
-      );
+          : item;
+      });
     });
   };
 
@@ -51,11 +52,21 @@ const App = () => {
     );
   };
 
+  const totalCartItems = () => {
+    const total = cartItems.reduce((total, item) => {
+      return total + item.product.price * item.amount;
+    }, 0);
+
+    return total.toLocaleString("en-EN", {
+      style: "currency",
+      currency: "USD",
+    });
+  };
+
   return (
-    <main className="min-h-screen relative">
-      <div className="grid grid-cols-[2fr_1fr] p-10 gap-x-4">
+    <main className="h-dvh relative w-screen overflow-x-hidden scroll-smooth">
+      <div className="grid grid-cols-[2fr_1fr] p-6 gap-x-4">
         <ProductHero
-          products={products}
           cartItems={cartItems}
           onIcrementAmount={handleIncrementAmount}
           onDecrementAmount={handleDecrementAmount}
@@ -64,6 +75,8 @@ const App = () => {
         <ProductCart
           cartItems={cartItems}
           onRemoveFromCart={handleRemoveFromCart}
+          totalCartItems={totalCartItems}
+          setCartItems={setCartItems}
         />
       </div>
     </main>
