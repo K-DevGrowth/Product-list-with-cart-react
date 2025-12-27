@@ -65,7 +65,7 @@ const App = () => {
 
   return (
     <main className="h-dvh relative w-screen overflow-x-hidden scroll-smooth">
-      <div className="grid grid-cols-[2fr_1fr] p-6 gap-x-4">
+      <div className="grid grid-cols-1 sm:grid-cols-[2fr_1fr] p-6 gap-x-4">
         <ProductHero
           cartItems={cartItems}
           onIcrementAmount={handleIncrementAmount}

@@ -13,12 +13,16 @@ const ProductHero = ({
     <section>
       <h1 className="text-3xl font-bold text-Rose-900">Desserts</h1>
 
-      <div className="grid md:grid-cols-3 grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
         {products.map((product) => (
           <div key={product.name} className="relative">
             <img
               src={product.image.desktop.replace("./assets/images/", "")}
               alt=""
+              className={`${
+                cartItems.find((item) => item.product.name === product.name)
+                  ?.amount > 0 && "border-2 rounded-lg border-Red"
+              }`}
             />
             <p className="pt-6 text-Rose-500">{product.category}</p>
             <p className="font-semibold text-Rose-900 text-[14px]">

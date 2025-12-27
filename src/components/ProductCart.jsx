@@ -19,8 +19,8 @@ const ProductCart = ({
   };
 
   return (
-    <div>
-      <h2 className="text-Red font-bold">
+    <div className="pt-10">
+      <h2 className="text-Red text-xl font-bold">
         Your Cart (
         {cartItems
           .map((item) => item.amount)
