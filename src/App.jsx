@@ -1,84 +1,71 @@
 import { useState } from "react";
-import ProductHero from "./components/ProductHero";
-import ProductCart from "./components/ProductCart";
+import MOCK_DATA from "./data.json";
+import useCart from "./hook/useCart";
+import Cart from "./components/Cart";
+import ProductCard from "./components/ProductCard";
+import { getCartItemQuantity } from "./utility/utility";
+import OrderConfirmationModal from "./components/OrderConfirmationModal";
 
 const App = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [products] = useState(MOCK_DATA);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const handleAddToCart = (product, amount) => {
-    setCartItems((prev) => {
-      const existingProduct = prev.find(
-        (item) => item.product.name === product.name
-      );
+  const {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    totalItems,
+    totalPrice,
+  } = useCart();
 
-      if (existingProduct) {
-        return prev.map((item) =>
-          item.product.name === product.name
-            ? { ...item, amount: item.amount + amount }
-            : item
-        );
-      }
-
-      return [...prev, { product: product, amount: 1 }];
-    });
+  const handleConfirmOrder = () => {
+    setShowConfirmation(true);
   };
 
-  const handleIncrementAmount = (product) => {
-    setCartItems((prev) => {
-      return prev.map((item) =>
-        item.product.name === product.name
-          ? { ...item, amount: item.amount + 1 }
-          : item
-      );
-    });
-  };
-
-  const handleDecrementAmount = (product) => {
-    setCartItems((prev) => {
-      return prev.map((item) => {
-        if (item.amount === 1) {
-          return item;
-        }
-        return item.product.name === product.name
-          ? { ...item, amount: item.amount - 1 }
-          : item;
-      });
-    });
-  };
-
-  const handleRemoveFromCart = (product) => {
-    setCartItems((prev) =>
-      prev.filter((item) => item.product.name !== product.name)
-    );
-  };
-
-  const totalCartItems = () => {
-    const total = cartItems.reduce((total, item) => {
-      return total + item.product.price * item.amount;
-    }, 0);
-
-    return total.toLocaleString("en-EN", {
-      style: "currency",
-      currency: "USD",
-    });
+  const handleStartNewOrder = () => {
+    setShowConfirmation(false);
+    clearCart();
   };
 
   return (
     <main className="h-dvh relative w-screen overflow-x-hidden scroll-smooth">
       <div className="grid grid-cols-1 sm:grid-cols-[2fr_1fr] p-6 gap-x-4">
-        <ProductHero
-          cartItems={cartItems}
-          onIcrementAmount={handleIncrementAmount}
-          onDecrementAmount={handleDecrementAmount}
-          onAddToCart={handleAddToCart}
-        />
-        <ProductCart
-          cartItems={cartItems}
-          onRemoveFromCart={handleRemoveFromCart}
-          totalCartItems={totalCartItems}
-          setCartItems={setCartItems}
-        />
+        <section>
+          <h1 className="text-3xl font-bold text-Rose-900">Desserts</h1>
+          <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
+            {products.map((product) => (
+              <ProductCard
+                key={product.name}
+                product={product}
+                quantity={getCartItemQuantity(cartItems, product.name)}
+                onAddToCart={addToCart}
+                onUpdateQuantity={updateQuantity}
+              />
+            ))}
+          </div>
+        </section>
+
+        <aside>
+          <Cart
+            cartItems={cartItems}
+            onRemove={removeFromCart}
+            totalPrice={totalPrice}
+            totalItems={totalItems}
+            onConfirm={handleConfirmOrder}
+          />
+        </aside>
       </div>
+
+      {showConfirmation && (
+        <OrderConfirmationModal
+          cartItems={cartItems}
+          totalPrice={totalPrice}
+          onClose={() => setShowConfirmation(false)}
+          onStartNew={handleStartNewOrder}
+        />
+      )}
     </main>
   );
 };
